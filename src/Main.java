@@ -1,7 +1,3 @@
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 public class Main {
 
     public static void main(String[] args){
@@ -35,13 +31,21 @@ public class Main {
 }
 
 class Threads implements Runnable{
+    int charSize;
     char[] alph;
     Threads(String a){
         alph = a.toCharArray();
+        charSize = alph.length;
     }
     public void run() {
-        for(int i = 0; i<alph.length;i++){
-            System.out.println(alph[i]);
-        }
+        int i = 0;
+        while(i < charSize){
+            try {
+                System.out.println(alph[i]);
+                i++;
+            }catch (Throwable t){
+                t.printStackTrace();
+            }
+         }
     }
 }
