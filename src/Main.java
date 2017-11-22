@@ -1,3 +1,6 @@
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 public class Main {
 
     public static void main(String[] args){
@@ -31,6 +34,8 @@ public class Main {
 }
 
 class Threads implements Runnable{
+    public static Lock lock = new ReentrantLock();
+
     int charSize;
     char[] alph;
     Threads(String a){
@@ -40,11 +45,14 @@ class Threads implements Runnable{
     public void run() {
         int i = 0;
         while(i < charSize){
+            lock.lock();
             try {
                 System.out.println(alph[i]);
                 i++;
             }catch (Throwable t){
                 t.printStackTrace();
+            }finally {
+                lock.unlock();
             }
          }
     }
