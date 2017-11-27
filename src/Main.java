@@ -22,11 +22,12 @@ public class Main {
         thread3.start();
         threadD.start();
 
-        a.startPorc();
-
+        a.startProc();
     }
 }
+
 class Alphabet{
+
     private final Lock lock;
     private String alphabet;
     Condition c1;
@@ -45,7 +46,7 @@ class Alphabet{
     }
     Lock getLock(){return lock;}
 
-    void startPorc(){
+    void startProc(){
         try {
             lock.lock();
             Thread.sleep(1500);
@@ -110,6 +111,7 @@ class Thread1 implements Runnable{
         }
     }
 }
+
 class Thread2 implements Runnable{
     private final Lock lock;
     private final Alphabet alphabet;
@@ -141,6 +143,7 @@ class Thread2 implements Runnable{
         }
     }
 }
+
 class Thread3 implements Runnable{
     private final Lock lock;
     private final Alphabet alphabet;
@@ -172,6 +175,7 @@ class Thread3 implements Runnable{
         }
     }
 }
+
 class ThreadD implements Runnable{
     private final Lock lock;
     private final Alphabet alphabet;
