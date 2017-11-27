@@ -76,10 +76,6 @@ class Alphabet{
             lock.unlock();
         }
     }
-
-    public String toString(){
-        return alphabet;
-    }
 }
 
 class Thread1 implements Runnable{
