@@ -22,15 +22,12 @@ public class Main {
         thread3.start();
         threadD.start();
 
-        while(!Alphabet.start) {
-            a.startPorc();
-        }
+        a.startPorc();
 
     }
 }
 class Alphabet{
     private final Lock lock;
-    public static boolean start = false;
     private String alphabet;
     Condition c1;
     Condition c2;
@@ -51,6 +48,7 @@ class Alphabet{
     void startPorc(){
         try {
             lock.lock();
+            Thread.sleep(1000);
             c1.signal();
         }catch (Throwable t){
 
@@ -101,7 +99,6 @@ class Thread1 implements Runnable{
             alphabet.getLock().lock();
             try {
                 alphabet.c1.await();
-                Alphabet.start = true;
                 alphabet.getChar(alph[i],pos);
                 System.out.print(alph[i] + " ");
                 i++;
