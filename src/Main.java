@@ -4,160 +4,205 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
+        Alphabet a = new Alphabet();
 
-        try{
-            Thread1 t1 = new Thread1("AEIMQUY");
-            Thread2 t2 = new Thread2("BFJNRVZ");
-            Thread3 t3 = new Thread3("CGKOSW");
-            ThreadD tD = new ThreadD("DHLPTX");
-            Locks l = new Locks();
+        Thread1 t1 = new Thread1("AEIMQUY",a);
+        Thread2 t2 = new Thread2("BFJNRVZ",a);
+        Thread3 t3 = new Thread3("CGKOSW",a);
+        ThreadD td = new ThreadD("DHLPTX",a);
 
-            Thread thread1 = new Thread(t1);
-            Thread thread2 = new Thread(t2);
-            Thread thread3 = new Thread(t3);
-            Thread threadD = new Thread(tD);
-            Thread lo = new Thread(l);
+        Thread thread1 = new Thread(t1);
+        Thread thread2 = new Thread(t2);
+        Thread thread3 = new Thread(t3);
+        Thread threadD = new Thread(td);
 
-            thread1.start();
-            thread2.start();
-            thread3.start();
-            threadD.start();
-            lo.start();
+        thread1.start();
+        thread2.start();
+        thread3.start();
+        threadD.start();
+
+        a.startPorc();
+
+    }
+}
+class Alphabet{
+    private final Lock lock;
+    private String alphabet;
+    Condition c1;
+    Condition c2;
+    Condition c3;
+    Condition cD;
 
 
+    Alphabet(){
+        lock = new ReentrantLock();
+        c1 = lock.newCondition();
+        c2 = lock.newCondition();
+        c3 = lock.newCondition();
+        cD = lock.newCondition();
+        alphabet = new String();
+    }
+    Lock getLock(){return lock;}
 
+    void startPorc(){
+        try {
+            lock.lock();
+            c1.signal();
+        }catch (Throwable t){
 
-        }catch(Throwable e){
-            e.printStackTrace();
+        }finally{
+            lock.unlock();
         }
 
+    }
+
+    void getChar(char c, int i){
+        lock.lock();
+        try{
+            alphabet += c;
+            if(i == 1){
+                c2.signal();
+            }else if(i == 2){
+                c3.signal();
+            }else if(i == 3){
+                cD.signal();
+            }else if(i == 4){
+                c1.signal();
+            }
+        }catch (Throwable t){
+            t.printStackTrace();
+        }finally {
+            lock.unlock();
+        }
+    }
+
+    public String toString(){
+        return alphabet;
     }
 }
 
 class Thread1 implements Runnable{
-    Locks lock = new Locks();
-    int charSize;
-    char[] alph;
-    Thread1(String a){
-        alph = a.toCharArray();
-        charSize = alph.length;
+    private final Lock lock;
+    private final Alphabet alphabet;
+    private char[] alph;
+    private int alphSize;
+    int pos;
+
+    Thread1(String s, Alphabet A){
+        alph = s.toCharArray();
+        alphSize = alph.length;
+        alphabet = A;
+        lock = A.getLock();
+        pos = 1;
     }
-    public void run() {
+    public void run(){
         int i = 0;
-        while(i < charSize){
-            lock.lock.lock();
+        while(i < alphSize) {
+            alphabet.getLock().lock();
             try {
-                System.out.println("Waiting for the signal.");
-                //lock.is1Print.awaitUninterruptibly();
-                System.out.println("signal found.");
-                System.out.println(alph[i]);
+                alphabet.c1.await();
+                alphabet.getChar(alph[i],pos);
+                System.out.print(alph[i] + " ");
                 i++;
-                Thread.sleep(100);
-            }catch (Throwable t){
+            } catch (Throwable t) {
                 t.printStackTrace();
-            }finally {
-                lock.lock.unlock();
-                lock.is2Print.signal();
+            } finally {
+                alphabet.getLock().unlock();
             }
-         }
+        }
     }
 }
 class Thread2 implements Runnable{
-    Locks lock = new Locks();
-    int charSize;
-    char[] alph;
-    Thread2(String a){
-        alph = a.toCharArray();
-        charSize = alph.length;
+    private final Lock lock;
+    private final Alphabet alphabet;
+    private char[] alph;
+    private int alphSize;
+    int pos;
+
+    Thread2(String s, Alphabet A){
+        alph = s.toCharArray();
+        alphSize = alph.length;
+        alphabet = A;
+        lock = A.getLock();
+        pos = 2;
     }
-    public void run() {
+    public void run(){
         int i = 0;
-        while(i < charSize){
-            lock.lock.lock();
+        while(i < alphSize) {
+            alphabet.getLock().lock();
             try {
-                System.out.println("Waiting for the signal.");
-                lock.is2Print.awaitUninterruptibly();
-                System.out.println("signal found.");
-                System.out.println(alph[i]);
+                alphabet.c2.await();
+                alphabet.getChar(alph[i],pos);
+                System.out.print(alph[i] + " ");
                 i++;
-                Thread.sleep(100);
-            }catch (Throwable t){
+            } catch (Throwable t) {
                 t.printStackTrace();
-            }finally {
-                lock.lock.unlock();
-                lock.is3Print.signal();
+            } finally {
+                alphabet.getLock().unlock();
             }
         }
     }
 }
 class Thread3 implements Runnable{
-    Locks lock = new Locks();
-    int charSize;
-    char[] alph;
-    Thread3(String a){
-        alph = a.toCharArray();
-        charSize = alph.length;
+    private final Lock lock;
+    private final Alphabet alphabet;
+    private char[] alph;
+    private int alphSize;
+    int pos;
+
+    Thread3(String s, Alphabet A){
+        alph = s.toCharArray();
+        alphSize = alph.length;
+        alphabet = A;
+        lock = A.getLock();
+        pos = 3;
     }
-    public void run() {
+    public void run(){
         int i = 0;
-        while(i < charSize){
-            lock.lock.lock();
+        while(i < alphSize) {
+            alphabet.getLock().lock();
             try {
-                System.out.println("Waiting for the signal.");
-                lock.is3Print.awaitUninterruptibly();
-                System.out.println("signal found.");
-                System.out.println(alph[i]);
+                alphabet.c3.await();
+                alphabet.getChar(alph[i],pos);
+                System.out.print(alph[i] + " ");
                 i++;
-                Thread.sleep(100);
-            }catch (Throwable t){
+            } catch (Throwable t) {
                 t.printStackTrace();
-            }finally {
-                lock.lock.unlock();
-                lock.isDPrint.signal();
+            } finally {
+                alphabet.getLock().unlock();
             }
         }
     }
 }
 class ThreadD implements Runnable{
-    Locks lock = new Locks();
-    int charSize;
-    char[] alph;
-    ThreadD(String a){
-        alph = a.toCharArray();
-        charSize = alph.length;
+    private final Lock lock;
+    private final Alphabet alphabet;
+    private char[] alph;
+    private int alphSize;
+    int pos;
+
+    ThreadD(String s, Alphabet A){
+        alph = s.toCharArray();
+        alphSize = alph.length;
+        alphabet = A;
+        lock = A.getLock();
+        pos = 4;
     }
-    public void run() {
+    public void run(){
         int i = 0;
-        while(i < charSize){
-            lock.lock.lock();
+        while(i < alphSize) {
+            alphabet.getLock().lock();
             try {
-                System.out.println("Waiting for the signal.");
-                lock.isDPrint.awaitUninterruptibly();
-                System.out.println("signal found.");
-                System.out.println(alph[i]);
+                alphabet.cD.await();
+                alphabet.getChar(alph[i],pos);
+                System.out.print(alph[i] + " ");
                 i++;
-                Thread.sleep(100);
-            }catch (Throwable t){
+            } catch (Throwable t) {
                 t.printStackTrace();
-            }finally {
-                lock.lock.unlock();
-                lock.is1Print.signal();
+            } finally {
+                alphabet.getLock().unlock();
             }
         }
-    }
-}
-
-class Locks implements Runnable{
-    public static final Lock lock = new ReentrantLock();
-    public static final Condition is1Print = lock.newCondition();
-    public static final Condition is2Print = lock.newCondition();
-    public static final Condition is3Print = lock.newCondition();
-    public static final Condition isDPrint = lock.newCondition();
-    public static final Condition noPrint = lock.newCondition();
-
-    public void run(){
-        System.out.println("this is a test.");
-        is1Print.signal();
     }
 }
