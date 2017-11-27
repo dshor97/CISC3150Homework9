@@ -48,7 +48,7 @@ class Alphabet{
     void startPorc(){
         try {
             lock.lock();
-            Thread.sleep(1000);
+            Thread.sleep(1500);
             c1.signal();
         }catch (Throwable t){
 
