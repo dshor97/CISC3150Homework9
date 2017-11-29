@@ -5,24 +5,35 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Main {
 
     public static void main(String[] args) {
-        Alphabet a = new Alphabet();
+        try {
+            Alphabet a = new Alphabet();
 
-        Thread1 t1 = new Thread1("AEIMQUY",a);
-        Thread2 t2 = new Thread2("BFJNRVZ",a);
-        Thread3 t3 = new Thread3("CGKOSW",a);
-        ThreadD td = new ThreadD("DHLPTX",a);
+            Thread1 t1 = new Thread1("AEIMQUY", a);
+            Thread2 t2 = new Thread2("BFJNRVZ", a);
+            Thread3 t3 = new Thread3("CGKOSW", a);
+            ThreadD td = new ThreadD("DHLPTX", a);
 
-        Thread thread1 = new Thread(t1);
-        Thread thread2 = new Thread(t2);
-        Thread thread3 = new Thread(t3);
-        Thread threadD = new Thread(td);
+            Thread thread1 = new Thread(t1);
+            Thread thread2 = new Thread(t2);
+            Thread thread3 = new Thread(t3);
+            Thread threadD = new Thread(td);
 
-        thread1.start();
-        thread2.start();
-        thread3.start();
-        threadD.start();
+            thread1.start();
+            thread2.start();
+            thread3.start();
+            threadD.start();
 
-        a.startProc();
+            a.startProc();
+
+            thread1.join();
+            thread2.join();
+            thread3.join();
+            threadD.join();
+        }catch (Throwable t){
+            t.printStackTrace();
+        }finally {
+            System.out.println();
+        }
     }
 }
 
